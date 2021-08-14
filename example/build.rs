@@ -1,13 +1,13 @@
 //! an example showing how to generate images for embedding in Rust docs.
 
-use docima::{generate_img, DocimaResult, StdResult};
+use docima::{generate_image, DocimaResult, StdResult};
 use plotters::prelude::*;
 use rand::{Rng, SeedableRng};
 use rand_xoshiro::Xoshiro256PlusPlus;
 
 fn main() -> DocimaResult<()> {
     // an example using the `plotters` crate
-    generate_img(
+    generate_image(
         plot_histogram,
         600,
         400,
@@ -18,7 +18,7 @@ fn main() -> DocimaResult<()> {
     )?;
 
     // an example using a custom closure
-    generate_img(
+    generate_image(
         |buffer, _x, _y| {
             // using a seed so that the rendered image doesn't change
             let mut rng = Xoshiro256PlusPlus::seed_from_u64(1234);
