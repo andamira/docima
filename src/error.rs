@@ -25,9 +25,6 @@ pub enum DocimaError {
 
     /// A custom error, explained in the string.
     Custom(String),
-
-    /// An undefined error, mainly for debugging.
-    Undefined,
 }
 
 impl fmt::Display for DocimaError {
@@ -38,7 +35,6 @@ impl fmt::Display for DocimaError {
             ImageError(err) => write!(f, "{}", err),
             StdError(err) => write!(f, "{}", err),
             Custom(err) => write!(f, "{}", err),
-            Undefined => write!(f, "undefined error"),
         }
     }
 }
