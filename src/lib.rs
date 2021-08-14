@@ -18,7 +18,7 @@
 //! 3. call the needed functions from your build script. E.g.:
 //!
 //! ```ignore
-//!     embed_img(
+//!     generate_img(
 //!        my_function,
 //!        600,
 //!        400,
@@ -64,7 +64,7 @@ pub use error::{DocimaError, DocimaResult, StdResult};
 ///
 /// In order to generate the image from the build script (e.g. in `build.rs`):
 /// ```ignore
-/// embed_img(my_function, 40, 40, "images/my_image.html", "alt", "title", "span")?;
+/// generate_img(my_function, 40, 40, "images/my_image.html", "alt", "title", "span")?;
 /// ```
 ///
 /// And in order to embed the image in the Rust documentation (e.g. in `src/lib.rs`):
@@ -75,7 +75,7 @@ pub use error::{DocimaError, DocimaResult, StdResult};
 /// pub struct MyBeautifulImage;
 /// ```
 ///
-pub fn embed_img<F>(
+pub fn generate_img<F>(
     f: F,
     width: u32,
     height: u32,
