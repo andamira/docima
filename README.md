@@ -42,7 +42,7 @@ cargo doc --open
 You can refer to [the crate documentation](https://docs.rs/docima/) for more
 details. And there's also a [full practical example][2] available.
 
-[2]:https://github.com/joseluis/docima/tree/master/example
+[2]:https://github.com/andamira/docima/tree/master/example
 
 
 ## Similar crates

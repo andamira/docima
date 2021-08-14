@@ -1,10 +1,11 @@
 [package]
 name = "docima"
 description = "Generate images at build time & embed them in the Rust documentation"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2018"
 authors = ["José Luis Cruz <joseluis@andamira.net>"]
 repository = "https://github.com/andamira/docima"
+documentation = "https://docs.rs/docima"
 license = "MIT/Apache-2.0"
 include = [
     "src/*.rs",

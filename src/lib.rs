@@ -33,7 +33,7 @@
 //! ```
 //!
 //! See also the full
-//! [provided example](https://github.com/joseluis/docima/tree/master/example).
+//! [provided example](https://github.com/andamira/docima/tree/master/example).
 
 use data_encoding::BASE64_MIME;
 use image::{
