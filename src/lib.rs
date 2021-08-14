@@ -15,6 +15,7 @@
 //!        "the alt-text attribute",
 //!        "the title attribute",
 //!        "div",
+//!        true,
 //!     )?;
 //! ```
 //! 
@@ -57,16 +58,17 @@ pub use error::{DocimaError, DocimaResult, StdResult};
 ///   and returns a result.
 /// - `width`: the width of the image
 /// - `height`: the height of the image
-/// - `filename`: the output filename including its path from the project's root.
+/// - `file`: the output file, including the relative path from the project's root.
 /// - `alt`: the alt attribute for the `<img>` tag.
 /// - `title`: the title attribute for the `<img>` tag.
 /// - `wrap`: the optional HTML tag to wrap the `<img>` tag with (without brackets).
+/// - `overwrite`: if `false` the image will NOT be generated when the file already exists.
 ///
 /// # Example
 ///
 /// In order to generate the image from the build script (e.g. in `build.rs`):
 /// ```ignore
-/// generate_image(my_function, 40, 40, "images/my_image.html", "alt", "title", "span")?;
+/// generate_image(my_function, 40, 40, "images/my_image.html", "alt", "title", "span", true)?;
 /// ```
 ///
 /// And in order to embed the image in the Rust documentation (e.g. in `src/lib.rs`):
@@ -85,10 +87,29 @@ pub fn generate_image<F>(
     alt: &str,
     title: &str,
     wrap: &str,
+    overwrite: bool,
 ) -> DocimaResult<()>
 where
     F: Fn(&mut Vec<u8>, u32, u32) -> StdResult<()>,
 {
+    // prepare the output path
+    let filepath_str = root_path(output_file);
+    let filepath = Path::new(&filepath_str);
+    let dirpath = filepath.parent().ok_or_else(|| {
+        DocimaError::Custom(format![
+            "no parent: `{}`",
+            filepath.to_str().expect("filepath.to_str()")
+        ])
+    })?;
+    if !dirpath.exists() {
+        create_dir_all(dirpath)?;
+    }
+
+    // Don't generate this image if the file already exists and we're not overwriting.
+    if filepath.exists() && !overwrite {
+        return Ok(())
+    }
+
     let mut rgb_buffer = vec![0; width as usize * height as usize * 3];
 
     // generate the image as rgb8 using the provided function
@@ -114,19 +135,7 @@ where
         content = format!["<{0}>{1}</{0}>", wrap, content];
     }
 
-    // prepare the output path
-    let filepath_str = root_path(output_file);
-    let filepath = Path::new(&filepath_str);
-    let dirpath = filepath.parent().ok_or_else(|| {
-        DocimaError::Custom(format![
-            "no parent: `{}`",
-            filepath.to_str().expect("filepath.to_str()")
-        ])
-    })?;
-
-    create_dir_all(dirpath)?;
-
-    // write the output string to the desired location
+    // write the output string to the desired location only
     let mut outfile = File::create(filepath)?;
     write!(outfile, "{}", content)?;
 
@@ -135,7 +144,7 @@ where
 
 /// Returns a path relative to the root of the project.
 fn root_path(relative: &str) -> String {
-    let mut path = project_root::get_project_root().expect("get_project_root");
+    let mut path = project_root::get_project_root().expect("get_project_root()");
     path.push(relative);
     path.to_str().expect("path.to_str()").to_owned()
 }

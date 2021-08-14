@@ -15,6 +15,7 @@ fn main() -> DocimaResult<()> {
         "This is an histogram (alt)",
         "This is an histogram (title)",
         "div",
+        false,
     )?;
 
     // an example using a custom closure
@@ -35,6 +36,7 @@ fn main() -> DocimaResult<()> {
         "This is an square with random pixels (alt)",
         "a square with random color pixels",
         "span",
+        false,
     )?;
 
     Ok(())

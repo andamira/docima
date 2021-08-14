@@ -20,6 +20,7 @@ generate_image(
     "the alt-text attribute",
     "the title attribute",
     "div",
+    true,
 )?;
 ```
 
