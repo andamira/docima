@@ -13,7 +13,7 @@ include = [
 	"README.md",
 ]
 categories = ["rust-patterns", "development-tools::build-utils"]
-keywords = ["image", "img" "rustdoc", "documentation", "base64"]
+keywords = ["image", "img", "rustdoc", "documentation", "base64"]
 
 [dependencies]
 data-encoding = "2.3.2"
