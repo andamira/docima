@@ -1,0 +1,62 @@
+//!
+//!
+
+use image::error::ImageError;
+use std::{fmt, io};
+
+/// The docima `Result` type.
+pub type DocimaResult<T> = std::result::Result<T, DocimaError>;
+
+/// A standard `Result` type.
+pub type StdResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+
+/// The docima `Error` type.
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum DocimaError {
+    /// An IO error.
+    IoError(io::Error),
+
+    /// An `image` crate error.
+    ImageError(image::error::ImageError),
+
+    /// A dynamic `std` error.
+    StdError(Box<dyn std::error::Error>),
+
+    /// A custom error, explained in the string.
+    Custom(String),
+
+    /// An undefined error, mainly for debugging.
+    Undefined,
+}
+
+impl fmt::Display for DocimaError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        use DocimaError::*;
+        match self {
+            IoError(err) => write!(f, "{}", err),
+            ImageError(err) => write!(f, "{}", err),
+            StdError(err) => write!(f, "{}", err),
+            Custom(err) => write!(f, "{}", err),
+            Undefined => write!(f, "undefined error"),
+        }
+    }
+}
+
+impl From<io::Error> for DocimaError {
+    fn from(err: io::Error) -> Self {
+        Self::IoError(err)
+    }
+}
+
+impl From<ImageError> for DocimaError {
+    fn from(err: ImageError) -> Self {
+        Self::ImageError(err)
+    }
+}
+
+impl From<Box<dyn std::error::Error>> for DocimaError {
+    fn from(err: Box<dyn std::error::Error>) -> Self {
+        Self::StdError(err)
+    }
+}

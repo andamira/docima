@@ -1,0 +1,21 @@
+[package]
+name = "docima"
+description = "Generate images at build time & embed them in the Rust documentation"
+version = "0.1.0"
+edition = "2018"
+authors = ["José Luis Cruz <joseluis@andamira.net>"]
+repository = "https://github.com/andamira/docima"
+license = "MIT/Apache-2.0"
+include = [
+    "src/*.rs",
+    "Cargo.toml",
+	"LICENSE*",
+	"README.md",
+]
+categories = ["rust-patterns", "development-tools::build-utils"]
+keywords = ["image", "img" "rustdoc", "documentation", "base64"]
+
+[dependencies]
+data-encoding = "2.3.2"
+image = "0.23.14"
+project-root = "0.2.2"
