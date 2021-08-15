@@ -18,7 +18,7 @@
 //!        true,
 //!     )?;
 //! ```
-//! 
+//!
 //! 2. Include your image in the docs by using the [doc][0] attribute and
 //!    the [include_str][1] macro.
 //!
@@ -107,7 +107,7 @@ where
 
     // Don't generate this image if the file already exists and we're not overwriting.
     if filepath.exists() && !overwrite {
-        return Ok(())
+        return Ok(());
     }
 
     let mut rgb_buffer = vec![0; width as usize * height as usize * 3];
