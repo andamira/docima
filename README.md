@@ -12,16 +12,17 @@ Generate images at build time for embedding in the Rust documentation.
    They will be encoded as `png` → `base64` and saved as `HTML` tags. E.g.:
 
 ```rust
-generate_image(
-    my_image_generator_function,
-    600,
-    400,
-    "images/my_image.html",
-    "the alt-text attribute",
-    "the title attribute",
-    "div",
-    true,
-)?;
+ImageFile::new()
+    .path("images/my_image.html")
+    .width(600)
+    .height(400)
+    .title("My image")
+    .id("image-01")
+    .style("display: block; margin:auto;")
+    .wrapper("div")
+    .wrapper_style("background-color:red; padding:3px;")
+    .overwrite(true)
+    .generate(my_image_generator_function)?;
 ```
 
 2. Include your image in the Rust documentation by using the [doc][0] attribute

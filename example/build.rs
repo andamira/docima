@@ -1,26 +1,48 @@
 //! an example showing how to generate images for embedding in Rust docs.
 
-use docima::{generate_image, DocimaResult, StdResult};
+use docima::{DocimaResult, ImageFile, StdResult};
 use plotters::prelude::*;
 use rand::{Rng, SeedableRng};
 use rand_xoshiro::Xoshiro256PlusPlus;
 
 fn main() -> DocimaResult<()> {
     // an example using the `plotters` crate
-    generate_image(
-        plot_histogram,
-        600,
-        400,
-        "images/plotters-histogram.html",
-        "This is an histogram (alt)",
-        "This is an histogram (title)",
-        "div",
-        false,
-    )?;
+    ImageFile::new()
+        .path("images/plotters-histogram.html")
+        .width(600)
+        .height(400)
+        .title("an example histogram")
+        .style("display: block; margin: auto;")
+        .wrapper("div")
+        .wrapper_style(
+            "padding: 10px;
+            max-width: 630px;
+            margin: auto;
+            background-color: rgba(225,225,225,0.5);
+            border: 4px solid rgba(200,200,200,0.3);
+            border-radius: 4px;
+        ",
+        )
+        .generate(plot_histogram)?;
 
     // an example using a custom closure
-    generate_image(
-        |buffer, _x, _y| {
+    ImageFile::new()
+        .path("images/square-random-pixels.html")
+        .width(32)
+        .height(32)
+        .title("random pixels linking to 'rust-lang.org'")
+        .alt("A 32x32 square filled with random color pixels.")
+        .style(
+            "vertical-align: middle;
+            margin: 8px 0;
+            padding: 2px;
+            background: #22f4cd;
+        ",
+        )
+        .wrapper("a")
+        .wrapper_href("https://www.rust-lang.org/")
+        .wrapper_target("_blank")
+        .generate(|buffer, _x, _y| {
             // using a seed so that the rendered image doesn't change
             let mut rng = Xoshiro256PlusPlus::seed_from_u64(1234);
             for chunk in buffer.chunks_mut(3) {
@@ -29,15 +51,7 @@ fn main() -> DocimaResult<()> {
                 chunk[2] = rng.gen();
             }
             Ok(())
-        },
-        32,
-        32,
-        "images/square-random-pixels.html",
-        "This is an square with random pixels (alt)",
-        "a square with random color pixels",
-        "span",
-        false,
-    )?;
+        })?;
 
     Ok(())
 }

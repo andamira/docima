@@ -23,6 +23,8 @@ pub enum DocimaError {
     /// A dynamic `std` error.
     StdError(Box<dyn std::error::Error>),
 
+    MissingField(String),
+
     /// A custom error, explained in the string.
     Custom(String),
 }
@@ -34,6 +36,7 @@ impl fmt::Display for DocimaError {
             IoError(err) => write!(f, "{}", err),
             ImageError(err) => write!(f, "{}", err),
             StdError(err) => write!(f, "{}", err),
+            MissingField(err) => write!(f, "{}", err),
             Custom(err) => write!(f, "{}", err),
         }
     }
