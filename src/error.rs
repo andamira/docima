@@ -1,7 +1,6 @@
 //!
 //!
 
-use image::error::ImageError;
 use std::{fmt, io};
 
 /// The docima `Result` type.
@@ -18,7 +17,7 @@ pub enum DocimaError {
     IoError(io::Error),
 
     /// An `image` crate error.
-    ImageError(image::error::ImageError),
+    PngEncodingError(png::EncodingError),
 
     /// A dynamic `std` error.
     StdError(Box<dyn std::error::Error>),
@@ -34,7 +33,7 @@ impl fmt::Display for DocimaError {
         use DocimaError::*;
         match self {
             IoError(err) => write!(f, "{}", err),
-            ImageError(err) => write!(f, "{}", err),
+            PngEncodingError(err) => write!(f, "{}", err),
             StdError(err) => write!(f, "{}", err),
             MissingField(err) => write!(f, "{}", err),
             Custom(err) => write!(f, "{}", err),
@@ -48,9 +47,9 @@ impl From<io::Error> for DocimaError {
     }
 }
 
-impl From<ImageError> for DocimaError {
-    fn from(err: ImageError) -> Self {
-        Self::ImageError(err)
+impl From<png::EncodingError> for DocimaError {
+    fn from(err: png::EncodingError) -> Self {
+        Self::PngEncodingError(err)
     }
 }
 
