@@ -6,6 +6,10 @@ Generate images at build time for embedding in the Rust documentation.
 [![API](https://docs.rs/docima/badge.svg)](https://docs.rs/docima/)
 [![Lines Of Code](https://tokei.rs/b1/github/andamira/docima?category=code)](https://github.com/andamira/docima)
 
+## Warning
+
+The current API is going to evolve a lot while the major version number is 0.
+
 ## Usage
 
 1. First configure your build script to generate the images in the desired path.
@@ -31,7 +35,6 @@ ImageFile::new()
 ```rust
 #[doc = include_str!("../images/my_image.html") ]
 ```
-
 [0]:https://doc.rust-lang.org/rustdoc/the-doc-attribute.html
 [1]:https://doc.rust-lang.org/std/macro.include_str.html
 
@@ -41,11 +44,13 @@ ImageFile::new()
 cargo doc --open
 ```
 
-You can refer to [the crate documentation](https://docs.rs/docima/) for more
-details. And there's also a [full practical example][2] available.
+# Learning
 
-[2]:https://github.com/andamira/docima/tree/master/example
+You can refer to the crate [documentation][2] and the [source code][3] for more
+complete information and practical examples.
 
+[2]:https://docs.rs/docima/
+[3]:https://github.com/andamira/docima/blob/main/build.rs
 
 ## Similar crates
 

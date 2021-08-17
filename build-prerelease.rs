@@ -9,14 +9,14 @@ fn main() -> DocimaResult<()> {
     // an example using the `plotters` crate
     ImageFile::new()
         .path("images/plotters-histogram.html")
-        .width(600)
-        .height(400)
+        .width(400)
+        .height(300)
         .title("an example histogram")
         .style("display: block; margin: auto;")
         .wrapper("div")
         .wrapper_style(
             "padding: 10px;
-            max-width: 630px;
+            max-width: 430px;
             margin: auto;
             background-color: rgba(225,225,225,0.5);
             border: 4px solid rgba(200,200,200,0.3);
