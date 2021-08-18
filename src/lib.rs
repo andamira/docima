@@ -4,7 +4,7 @@
 //!
 //! 1. Configure your build script to generate the images in the desired path.
 //!
-//! ```ignore
+//! ```
 //! ImageFile::new()
 //!     .path("images/my_image.html")
 //!     .width(600)
@@ -21,15 +21,16 @@
 //! 2. Include your image in the docs by using the [doc][0] attribute and
 //!    the [include_str][1] macro.
 //!
-//! ```ignore
-//! #[doc = include_str!("../images/my_image.html") ]
+//! ```
+//! #[doc = include_str!("../images/my_image.html")]
+//! struct Foo;
 //! ```
 //! [0]:https://doc.rust-lang.org/rustdoc/the-doc-attribute.html
 //! [1]:https://doc.rust-lang.org/std/macro.include_str.html
 //!
 //! 3. Generate the docs:
 //! ```sh
-//! cargo doc --open
+//! $ cargo doc --open
 //! ```
 //! # Examples
 //!
@@ -63,8 +64,7 @@ use utils::root_path;
 ///
 /// # Example
 ///
-/// ```ignore
-///
+/// ```
 /// ImageFile::new()
 ///     .width(600)
 ///     .height(400)
@@ -128,8 +128,10 @@ impl Default for ImageFile {
             wrapper_style: String::default(),
             wrapper_href: String::default(),
             wrapper_target: String::default(),
-            // MAYBE set with feature
+            #[cfg(feature = "not_default_overwrite")]
             overwrite: false,
+            #[cfg(not(feature = "not_default_overwrite"))]
+            overwrite: true,
         }
     }
 }
@@ -154,7 +156,11 @@ impl ImageFile {
             return Err(DocimaError::MissingField("path".into()));
         }
 
-        // TODO WIP
+        // When the `build_when_doc` feature is active the images will be built
+        // only if the `doc` feature is used too, usually alongside `cargo doc`.
+        if cfg![feature = "build_when_doc"] && cfg![not(feature = "doc")] {
+            return Ok(());
+        }
 
         // prepare the output path
         let filepath_str = root_path(&self.path);

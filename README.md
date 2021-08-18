@@ -44,7 +44,52 @@ ImageFile::new()
 cargo doc --open
 ```
 
-# Learning
+## Features
+
+There are several features that allows to customize the defaults.
+
+### `not_default_overwrite`
+
+By default all images will always be generated even when the target file already
+exists. By using this feature you can avoid generation in case the file exists.
+
+Note that you can always override the default by using the `overwrite` method.
+
+### `build_when_doc`
+
+By enabling this feature images will only be generated when the following `doc`
+feature is also used.
+
+This can be very useful in case you need to always overwrite the generated files
+but don't want to generate the images when normally compiling the source code.
+
+### `doc`
+
+Use this feature manually, in conjunction to `build_when_doc`.
+
+You'll have to customize your setup using the the following example as a model:
+
+Add to `Cargo.toml`:
+```toml
+[features]
+doc = ["docima/doc"]
+
+[build-dependencies]
+docima = { version = "*", features = ["build_when_doc"] }
+```
+
+And the images will be generated when you run:
+```sh
+doc --features=doc
+```
+
+For greater convenience you can create a new alias in `.cargo/config.toml`:
+```toml
+[alias]
+docdoc = "doc --features=doc"
+```
+
+# More info
 
 You can refer to the crate [documentation][2] and the [source code][3] for more
 complete information and practical examples.

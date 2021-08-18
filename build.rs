@@ -1,6 +1,6 @@
 //! an example showing how to generate images for embedding in Rust docs.
 
-use docima::{DocimaResult, ImageFile, StdResult};
+use docima_builddep::{DocimaResult, ImageFile, StdResult};
 use plotters::prelude::*;
 use rand::{Rng, SeedableRng};
 use rand_xoshiro::Xoshiro256PlusPlus;

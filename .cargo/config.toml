@@ -4,8 +4,8 @@
 cl = "clippy"
 
 # DOC
-d = "doc --no-deps"
-do = "doc --no-deps --open"
+d = "doc --no-deps --features=doc"
+do = "doc --no-deps --open --features=doc"
 dd = "doc"
 ddo = "doc --open"
 
