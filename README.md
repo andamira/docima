@@ -78,7 +78,7 @@ doc = ["docima/doc"]
 docima = { version = "*", features = ["build_when_doc"] }
 ```
 
-And the images will be generated when you run:
+Then the images will *only* be generated when you use this feature, like this:
 ```sh
 doc --features=doc
 ```
