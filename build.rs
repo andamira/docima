@@ -6,6 +6,11 @@ use rand::{Rng, SeedableRng};
 use rand_xoshiro::Xoshiro256PlusPlus;
 
 fn main() -> DocimaResult<()> {
+    if option_env!("DOCS_RS").is_some() {
+        println!("cargo:warning=Wont run the build script on 'docs.rs'.");
+        return Ok(());
+    }
+
     // an example using the `plotters` crate
     ImageFile::new()
         .path("images/plotters-histogram.html")
