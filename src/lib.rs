@@ -9,11 +9,11 @@
 //!     .path("images/my_image.html")
 //!     .width(600)
 //!     .height(400)
-//!     .title("My image")
-//!     .id("image-01")
-//!     .style("display: block; margin:auto;")
+//!     .attr("title", "My image")
+//!     .attr("id", "image-01")
+//!     .attr("style", "display: block; margin:auto;")
 //!     .wrapper("div")
-//!     .wrapper_style("background-color:red; padding:3px;")
+//!     .wrapper_attr("style", "background-color:red; padding:3px;")
 //!     .overwrite(true)
 //!     .generate(my_image_generator_function)?;
 //! ```
@@ -47,6 +47,7 @@
 
 use data_encoding::BASE64_MIME;
 use std::{
+    collections::HashMap,
     fs::{create_dir_all, File},
     io::{Cursor, Write},
     path::Path,
@@ -88,22 +89,11 @@ pub struct ImageFile {
     // optional fields:
 
     // <img> attributes
-    alt: String,
-    title: String,
-    id: String,
-    class: String,
-    style: String,
+    attributes: HashMap<String, String>,
 
-    // html wrapper tag + attributes
+    // html wrapper tag & attributes
     wrapper: String,
-    wrapper_alt: String,
-    wrapper_title: String,
-    wrapper_id: String,
-    wrapper_class: String,
-    wrapper_style: String,
-    // `href` & `target` attributes will be used only when wrapper == "a"
-    wrapper_href: String,
-    wrapper_target: String,
+    wrapper_attributes: HashMap<String, String>,
 
     // controls whether existing images should be overwritten.
     overwrite: bool,
@@ -115,19 +105,11 @@ impl Default for ImageFile {
             width: 0,
             height: 0,
             path: String::default(),
-            alt: String::default(),
-            title: String::default(),
-            id: String::default(),
-            class: String::default(),
-            style: String::default(),
+            attributes: HashMap::new(),
+
             wrapper: String::default(),
-            wrapper_alt: String::default(),
-            wrapper_title: String::default(),
-            wrapper_id: String::default(),
-            wrapper_class: String::default(),
-            wrapper_style: String::default(),
-            wrapper_href: String::default(),
-            wrapper_target: String::default(),
+            wrapper_attributes: HashMap::new(),
+
             #[cfg(feature = "not_default_overwrite")]
             overwrite: false,
             #[cfg(not(feature = "not_default_overwrite"))]
@@ -205,21 +187,10 @@ impl ImageFile {
         let mut content = format!["<img src=\"data:image/png;base64,\n{}\" ", base64];
 
         // add the <img> attributes
-        if !self.id.is_empty() {
-            content += &format!["id=\"{}\" ", self.id];
+        for (attr, value) in self.attributes {
+            content += &format!["{0}=\"{1}\" ", attr, value];
         }
-        if !self.class.is_empty() {
-            content += &format!["class=\"{}\" ", self.class];
-        }
-        if !self.alt.is_empty() {
-            content += &format!["alt=\"{}\" ", self.alt];
-        }
-        if !self.title.is_empty() {
-            content += &format!["title=\"{}\" ", self.title];
-        }
-        if !self.style.is_empty() {
-            content += &format!["style=\"{}\" ", self.style];
-        }
+
         content += "/>";
 
         // add the wrapper HTML tag
@@ -227,30 +198,10 @@ impl ImageFile {
             let mut wrapper_open = format!["<{0} ", self.wrapper];
 
             // add the wrapper attributes to the opening tag
-            if !self.wrapper_id.is_empty() {
-                wrapper_open += &format!["class=\"{}\" ", self.wrapper_id];
+            for (attr, value) in self.wrapper_attributes {
+                wrapper_open += &format!["{0}=\"{1}\" ", attr, value];
             }
-            if !self.wrapper_class.is_empty() {
-                wrapper_open += &format!["class=\"{}\" ", self.wrapper_class];
-            }
-            if !self.wrapper_alt.is_empty() {
-                wrapper_open += &format!["alt=\"{}\" ", self.wrapper_alt];
-            }
-            if !self.wrapper_title.is_empty() {
-                wrapper_open += &format!["title=\"{}\" ", self.wrapper_title];
-            }
-            if !self.wrapper_style.is_empty() {
-                wrapper_open += &format!["style=\"{}\" ", self.wrapper_style];
-            }
-            // anchor specific attributes
-            if self.wrapper == "a" {
-                if !self.wrapper_href.is_empty() {
-                    wrapper_open += &format!["href=\"{}\" ", self.wrapper_href];
-                }
-                if !self.wrapper_target.is_empty() {
-                    wrapper_open += &format!["target=\"{}\" ", self.wrapper_target];
-                }
-            }
+
             wrapper_open += ">";
 
             content = format!["{0}{1}</{2}>", wrapper_open, content, self.wrapper];
@@ -288,33 +239,51 @@ impl ImageFile {
 
 /// # Optional Configuration methods
 impl ImageFile {
+    /// Sets the chosen attribute for the `<img>` tag.
+    ///
+    /// Valid attributes are: "alt", "title", "id", "class", "style", …
+    pub fn attr(mut self, attribute: &str, value: &str) -> Self {
+        self.attributes.insert(attribute.into(), value.into());
+        self
+    }
+
     /// Sets the `<img>` `alt` attribute.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn alt(mut self, alt: &str) -> Self {
-        self.alt = alt.into();
+        self.attributes.insert("alt".into(), alt.into());
         self
     }
 
     /// Sets the `<img>` `title` attribute.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn title(mut self, title: &str) -> Self {
-        self.title = title.into();
+        self.attributes.insert("title".into(), title.into());
         self
     }
 
     /// Sets the `<img>` `id` attribute.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn id(mut self, id: &str) -> Self {
-        self.id = id.into();
+        self.attributes.insert("id".into(), id.into());
         self
     }
 
     /// Sets the `<img>` `class` attribute.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn class(mut self, class: &str) -> Self {
-        self.class = class.into();
+        self.attributes.insert("class".into(), class.into());
         self
     }
 
     /// Sets the `<img>` `style` attribute.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn style(mut self, style: &str) -> Self {
-        self.style = style.into();
+        self.attributes.insert("style".into(), style.into());
         self
     }
 
@@ -324,53 +293,78 @@ impl ImageFile {
         self
     }
 
+    /// Sets an attribute for the wrapper tag around `<img>`.
+    ///
+    /// Valid attributes are: "alt", "title", "id", "class", "style"…
+    /// And if the wrapper is an anchor "a", then "href" & "target".
+    pub fn wrapper_attr(mut self, attribute: &str, value: &str) -> Self {
+        self.wrapper_attributes
+            .insert(attribute.into(), value.into());
+        self
+    }
+
     /// Sets the wrapper tag `alt` attribute.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn wrapper_alt(mut self, alt: &str) -> Self {
-        self.wrapper_alt = alt.into();
+        self.wrapper_attributes.insert("alt".into(), alt.into());
         self
     }
 
     /// Sets the wrapper tag `title` attribute.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn wrapper_title(mut self, title: &str) -> Self {
-        self.wrapper_title = title.into();
+        self.wrapper_attributes.insert("title".into(), title.into());
         self
     }
 
     /// Sets the wrapper tag `id` attribute.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn wrapper_id(mut self, id: &str) -> Self {
-        self.wrapper_id = id.into();
+        self.wrapper_attributes.insert("id".into(), id.into());
         self
     }
 
     /// Sets the wrapper tag `class` attribute.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn wrapper_class(mut self, class: &str) -> Self {
-        self.wrapper_class = class.into();
+        self.wrapper_attributes.insert("class".into(), class.into());
         self
     }
 
     /// Sets the wrapper tag `style` attribute.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn wrapper_style(mut self, style: &str) -> Self {
-        self.wrapper_style = style.into();
+        self.wrapper_attributes.insert("style".into(), style.into());
         self
     }
 
     /// Sets the wrapper tag `href` attribute.
     ///
-    /// The `wrapper` must be an anchor tag (`a`) in order for this to be used.
+    /// The `wrapper` must be an anchor tag (`a`) for this attribute to be valid.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn wrapper_href(mut self, href: &str) -> Self {
-        self.wrapper_href = href.into();
+        self.wrapper_attributes.insert("href".into(), href.into());
         self
     }
 
     /// Sets the wrapper tag `target` attribute.
     ///
-    /// The `wrapper` must be an anchor tag (`a`) in order for this to be used.
+    /// The `wrapper` must be an anchor tag (`a`) for this attribute to be valid.
+    #[deprecated]
+    #[doc(hidden)]
     pub fn wrapper_target(mut self, target: &str) -> Self {
-        self.wrapper_target = target.into();
+        self.wrapper_attributes
+            .insert("target".into(), target.into());
         self
     }
 
-    /// Sets the wrapper tag `style` attribute.
+    /// Sets the `overwrite` preference for the generated image.
     ///
     /// If `false` the image will only be generated if the chosen output file
     /// doesn't already exist.
