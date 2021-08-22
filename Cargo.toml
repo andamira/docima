@@ -1,7 +1,7 @@
 [package]
 name = "docima"
 description = "Generate images at build time & embed them in the Rust documentation"
-version = "0.8.1-builddep"
+version = "0.9.0"
 edition = "2018"
 authors = ["José Luis Cruz <joseluis@andamira.net>"]
 repository = "https://github.com/andamira/docima"
@@ -9,7 +9,7 @@ documentation = "https://docs.rs/docima"
 license = "MIT/Apache-2.0"
 include = [
     "src/*.rs",
-##	"build.rs",
+	"build.rs",
 	"images/",
     "Cargo.toml",
 	"LICENSE*",
@@ -25,7 +25,7 @@ png = "0.17.0"
 [build-dependencies]
 # in order to avoid cargo complain about cyclic dependencies, docima must depend
 # on a version of itself with a different minor version (the patch is not enough).
-## docima_builddep = { package = "docima", version = "0.7.0" }
+docima_builddep = { package = "docima", version = "0.8.1-builddep" }
 plotters = "0.3.1"
 rand = "0.8.4"
 rand_xoshiro = "0.6.0"
