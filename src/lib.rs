@@ -47,7 +47,7 @@
 
 use data_encoding::BASE64_MIME;
 use std::{
-    collections::HashMap,
+    collections::BTreeMap,
     fs::{create_dir_all, File},
     io::{Cursor, Write},
     path::Path,
@@ -89,11 +89,11 @@ pub struct ImageFile {
     // optional fields:
 
     // <img> attributes
-    attributes: HashMap<String, String>,
+    attributes: BTreeMap<String, String>,
 
     // html wrapper tag & attributes
     wrapper: String,
-    wrapper_attributes: HashMap<String, String>,
+    wrapper_attributes: BTreeMap<String, String>,
 
     // controls whether existing images should be overwritten.
     overwrite: bool,
@@ -105,10 +105,10 @@ impl Default for ImageFile {
             width: 0,
             height: 0,
             path: String::default(),
-            attributes: HashMap::new(),
+            attributes: BTreeMap::new(),
 
             wrapper: String::default(),
-            wrapper_attributes: HashMap::new(),
+            wrapper_attributes: BTreeMap::new(),
 
             #[cfg(feature = "not_default_overwrite")]
             overwrite: false,

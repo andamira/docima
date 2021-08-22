@@ -11,10 +11,11 @@ fn main() -> DocimaResult<()> {
         .path("images/plotters-histogram.html")
         .width(400)
         .height(300)
-        .title("an example histogram")
-        .style("display: block; margin: auto;")
+        .attr("title", "an example histogram")
+        .attr("style", "display: block; margin: auto;")
         .wrapper("div")
-        .wrapper_style(
+        .wrapper_attr(
+            "style",
             "padding: 10px;
             max-width: 430px;
             margin: auto;
@@ -30,9 +31,10 @@ fn main() -> DocimaResult<()> {
         .path("images/square-random-pixels.html")
         .width(32)
         .height(32)
-        .title("random pixels linking to 'rust-lang.org'")
-        .alt("A 32x32 square filled with random color pixels.")
-        .style(
+        .attr("title", "random pixels linking to 'rust-lang.org'")
+        .attr("alt", "A 32x32 square filled with random color pixels.")
+        .attr(
+            "style",
             "vertical-align: middle;
             margin: 8px 0;
             padding: 2px;
@@ -40,8 +42,8 @@ fn main() -> DocimaResult<()> {
         ",
         )
         .wrapper("a")
-        .wrapper_href("https://www.rust-lang.org/")
-        .wrapper_target("_blank")
+        .wrapper_attr("href", "https://www.rust-lang.org/")
+        .wrapper_attr("target", "_blank")
         .generate(|buffer, _x, _y| {
             // using a seed so that the rendered image doesn't change
             let mut rng = Xoshiro256PlusPlus::seed_from_u64(1234);
